@@ -1,0 +1,26 @@
+<!doctype html><html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentPKI · JWKS与撤销最佳实践</title>
+<style>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial;max-width:960px;margin:40px auto;padding:0 16px;line-height:1.6}code,pre{background:#f6f8fa;border-radius:6px;padding:2px 6px}pre{padding:12px}.footer{margin-top:40px;padding-top:12px;border-top:1px solid #eee;color:#666;font-size:14px}</style>
+</head><body>
+<h1>AgentPKI — 信任锚（JWKS / 撤销 / Status List）</h1>
+<p>配合“推理收据/验签”叙事，服务安全与合规人群。</p>
+<h2>JWKS 说明与轮换</h2>
+<ul>
+  <li>每把密钥设置 <code>kid</code>；轮换：先上新钥、后下旧钥（保留宽限期）。</li>
+  <li>公开 <code>jwks_uri</code>，支持缓存（ETag/Cache‑Control）。</li>
+  <li>参考：IETF RFC7517、Auth0/Okta 文档。</li>
+</ul>
+<p>示例：<a href="./examples/jwks.json">jwks.json</a></p>
+<h2>撤销策略（CRL / Status List）</h2>
+<ul>
+  <li>并行支持：传统 CRL（简单清单）+ W3C Status List 2021（压缩位图）。</li>
+  <li>常见撤销理由：所有权变更、密钥泄露、滥用、主动退出。</li>
+  <li>响应建议：24h 内更新清单并公告时间戳。</li>
+</ul>
+<h2>模板与示例</h2>
+<pre><code>// CRL (JSON)
+{ "revoked": [ {"kid":"2025-01-01-rsa","reason":"compromise","revoked_at":"2025-01-10T00:00:00Z"} ] }</code></pre>
+<div class="footer"><p>Last updated: <span id="d"></span></p><p>Contact: agentstandards@gmail.com · GitHub: https://github.com/agentstandards</p></div>
+<script>document.getElementById('d').textContent=new Date().toISOString().slice(0,10);</script>
+</body></html>
